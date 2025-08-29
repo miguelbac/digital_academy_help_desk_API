@@ -9,4 +9,7 @@ public interface RequestServiceContract {
     RequestResponseDTO createRequest(RequestCreateDTO dto);
 
     List<RequestResponseDTO> getAllRequests();
+
+    RequestResponseDTO markAsAttended(Long requestId, String technicianName);
+
 }

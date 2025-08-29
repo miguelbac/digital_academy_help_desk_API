@@ -41,4 +41,17 @@ public class RequestService implements RequestServiceContract {
                 .map(RequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RequestResponseDTO markAsAttended(Long requestId, String technicianName) {
+        Request request = repository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        request.setStatus("attended");
+        request.setTechnician(technicianName);   // campo interno
+        request.setAttendedAt(LocalDateTime.now());
+
+        Request updated = repository.save(request);
+        return RequestMapper.toDTO(updated);
+    }
 }
