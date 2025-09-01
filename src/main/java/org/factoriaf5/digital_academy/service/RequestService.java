@@ -43,15 +43,44 @@ public class RequestService implements RequestServiceContract {
     }
 
     @Override
-    public RequestResponseDTO markAsAttended(Long requestId, String technicianName) {
-        Request request = repository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found"));
+    public RequestResponseDTO updateStatus(Long id, String newStatus) {
+        Request request = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + id));
+        request.setStatus(newStatus);
+        Request saved = repository.save(request);
+        return RequestMapper.toDTO(saved);
+    }
 
-        request.setStatus("attended");
-        request.setTechnician(technicianName);   // campo interno
-        request.setAttendedAt(LocalDateTime.now());
+    @Override
+    public List<RequestResponseDTO> getRequestsByTopic(String topicName) {
+        return repository.findAll().stream()
+                .filter(r -> r.getTopic().equalsIgnoreCase(topicName))
+                .map(RequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
-        Request updated = repository.save(request);
-        return RequestMapper.toDTO(updated);
+    @Override
+    public List<RequestResponseDTO> searchByRequesterName(String requesterName) {
+        return repository.findByRequesterNameContainingIgnoreCase(requesterName)
+                .stream()
+                .map(RequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteRequest(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Request not found with id: " + id);
+        }
+        repository.deleteById(id);
+    }
+
+    @Override
+    public RequestResponseDTO updateDescription(Long id, String newDescription) {
+        Request request = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + id));
+        request.setDescription(newDescription);
+        Request saved = repository.save(request);
+        return RequestMapper.toDTO(saved);
     }
 }

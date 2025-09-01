@@ -2,10 +2,12 @@ package org.factoriaf5.digital_academy.repository;
 
 import org.factoriaf5.digital_academy.model.Request;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-
-    // Todas las solicitudes ordenadas por fecha de creación ascendente
     List<Request> findAllByOrderByCreatedAtAsc();
+    List<Request> findByRequesterNameContainingIgnoreCase(String requesterName);
 }

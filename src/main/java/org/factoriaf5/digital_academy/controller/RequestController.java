@@ -3,7 +3,6 @@ package org.factoriaf5.digital_academy.controller;
 import org.factoriaf5.digital_academy.contract.RequestServiceContract;
 import org.factoriaf5.digital_academy.dto.RequestCreateDTO;
 import org.factoriaf5.digital_academy.dto.RequestResponseDTO;
-import org.factoriaf5.digital_academy.dto.RequestAttendDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,21 +19,41 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<RequestResponseDTO> create(@RequestBody RequestCreateDTO dto) {
-        RequestResponseDTO response = service.createRequest(dto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<RequestResponseDTO> createRequest(@RequestBody RequestCreateDTO dto) {
+        return ResponseEntity.ok(service.createRequest(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<RequestResponseDTO>> getAll() {
-        List<RequestResponseDTO> requests = service.getAllRequests();
-        return ResponseEntity.ok(requests);
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
+        return ResponseEntity.ok(service.getAllRequests());
     }
 
-    @PatchMapping("/{id}/attend")
-    public ResponseEntity<RequestResponseDTO> attend(@PathVariable Long id,
-                                                     @RequestBody RequestAttendDTO dto) {
-        RequestResponseDTO updated = service.markAsAttended(id, dto.getAttendedBy());
-        return ResponseEntity.ok(updated);
+    @PatchMapping("/{id}/{status}")
+    public ResponseEntity<RequestResponseDTO> updateStatus(@PathVariable Long id, @PathVariable String status) {
+        return ResponseEntity.ok(service.updateStatus(id, status));
+    }
+
+    @GetMapping("/topic/{topicName}")
+    public ResponseEntity<List<RequestResponseDTO>> getRequestsByTopic(@PathVariable String topicName) {
+        return ResponseEntity.ok(service.getRequestsByTopic(topicName));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<RequestResponseDTO>> searchByRequesterName(@RequestParam String name) {
+        return ResponseEntity.ok(service.searchByRequesterName(name));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRequest(@PathVariable Long id) {
+        service.deleteRequest(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/description")
+    public ResponseEntity<RequestResponseDTO> updateDescription(
+            @PathVariable Long id,
+            @RequestBody String newDescription
+    ) {
+        return ResponseEntity.ok(service.updateDescription(id, newDescription));
     }
 }
