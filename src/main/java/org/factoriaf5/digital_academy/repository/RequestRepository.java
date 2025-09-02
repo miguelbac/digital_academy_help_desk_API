@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
+
     List<Request> findAllByOrderByCreatedAtAsc();
-    List<Request> findByRequesterNameContainingIgnoreCase(String requesterName);
+    List<Request> findByRequesterNameContainingIgnoreCaseOrderByCreatedAtAsc(String requesterName);
+    List<Request> findByTopicOrderByCreatedAtAsc(String topic);
 }
