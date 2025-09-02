@@ -83,4 +83,22 @@ public class RequestService implements RequestServiceContract {
         Request saved = repository.save(request);
         return RequestMapper.toDTO(saved);
     }
+
+    @Override
+    public RequestResponseDTO reassignRequester(Long id, String newRequesterName) {
+        Request request = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + id));
+        request.setRequesterName(newRequesterName);
+        Request saved = repository.save(request);
+        return RequestMapper.toDTO(saved);
+    }
+
+    @Override
+    public RequestResponseDTO updateTopic(Long id, String newTopic) {
+        Request request = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + id));
+        request.setTopic(newTopic);
+        Request saved = repository.save(request);
+        return RequestMapper.toDTO(saved);
+    }
 }

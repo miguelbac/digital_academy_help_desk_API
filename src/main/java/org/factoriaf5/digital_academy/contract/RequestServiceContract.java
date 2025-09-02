@@ -13,4 +13,6 @@ public interface RequestServiceContract {
     List<RequestResponseDTO> searchByRequesterName(String requesterName);
     void deleteRequest(Long id);
     RequestResponseDTO updateDescription(Long id, String newDescription);
+    RequestResponseDTO reassignRequester(Long id, String newRequesterName);
+    RequestResponseDTO updateTopic(Long id, String newTopic);
 }

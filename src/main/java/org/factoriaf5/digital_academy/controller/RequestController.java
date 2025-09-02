@@ -56,4 +56,20 @@ public class RequestController {
     ) {
         return ResponseEntity.ok(service.updateDescription(id, newDescription));
     }
+
+    @PatchMapping("/{id}/reassign")
+    public ResponseEntity<RequestResponseDTO> reassignRequester(
+            @PathVariable Long id,
+            @RequestBody String newRequesterName
+    ) {
+        return ResponseEntity.ok(service.reassignRequester(id, newRequesterName));
+    }
+
+    @PatchMapping("/{id}/topic")
+    public ResponseEntity<RequestResponseDTO> updateTopic(
+            @PathVariable Long id,
+            @RequestBody String newTopic
+    ) {
+        return ResponseEntity.ok(service.updateTopic(id, newTopic));
+    }
 }
