@@ -37,12 +37,12 @@ public class GlobalExceptionHandler {
     ) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(InvalidStatusException.class)
