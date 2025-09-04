@@ -87,7 +87,7 @@ Contraseña: (vacío)
 
 Consola: http://localhost:8080/h2-console
 
-📝 Diagrama de clases
+## 📝 Diagrama de clases
 
 ```mermaid
 classDiagram
@@ -200,6 +200,6 @@ classDiagram
     RequestMapper --> RequestResponseDTO
 ```
 
-🧪 Captura de tests
+## 🧪 Captura de tests
 
 <img width="358" height="222" alt="image" src="https://github.com/user-attachments/assets/40a45b3e-6e08-4069-8714-3f3120bde899" />
