@@ -13,6 +13,10 @@ public class RequestResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime attendedAt;
 
+    // 🔹 Constructor vacío (para frameworks y tests)
+    public RequestResponseDTO() {}
+
+    // 🔹 Constructor con todos los parámetros
     public RequestResponseDTO(Long id, String requesterName, String topic,
                               String description, String status,
                               String attendedBy, LocalDateTime createdAt,
@@ -27,68 +31,34 @@ public class RequestResponseDTO {
         this.attendedAt = attendedAt;
     }
 
-
-    public Long getId() {
-        return id;
+    // 🔹 Constructor sin fechas (para tests rápidos)
+    public RequestResponseDTO(Long id, String requesterName, String topic,
+                              String description, String status, String attendedBy) {
+        this(id, requesterName, topic, description, status, attendedBy, null, null);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getRequesterName() {
-        return requesterName;
-    }
+    public String getRequesterName() { return requesterName; }
+    public void setRequesterName(String requesterName) { this.requesterName = requesterName; }
 
-    public void setRequesterName(String requesterName) {
-        this.requesterName = requesterName;
-    }
+    public String getTopic() { return topic; }
+    public void setTopic(String topic) { this.topic = topic; }
 
-    public String getTopic() {
-        return topic;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getAttendedBy() { return attendedBy; }
+    public void setAttendedBy(String attendedBy) { this.attendedBy = attendedBy; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getAttendedBy() {
-        return attendedBy;
-    }
-
-    public void setAttendedBy(String attendedBy) {
-        this.attendedBy = attendedBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getAttendedAt() {
-        return attendedAt;
-    }
-
-    public void setAttendedAt(LocalDateTime attendedAt) {
-        this.attendedAt = attendedAt;
-    }
+    public LocalDateTime getAttendedAt() { return attendedAt; }
+    public void setAttendedAt(LocalDateTime attendedAt) { this.attendedAt = attendedAt; }
 }

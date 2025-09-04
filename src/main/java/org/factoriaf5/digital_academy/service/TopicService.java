@@ -2,6 +2,7 @@ package org.factoriaf5.digital_academy.service;
 
 import org.factoriaf5.digital_academy.contract.TopicServiceContract;
 import org.factoriaf5.digital_academy.dto.TopicDTO;
+import org.factoriaf5.digital_academy.mapper.TopicMapper;
 import org.factoriaf5.digital_academy.repository.TopicRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class TopicService implements TopicServiceContract {
     public List<TopicDTO> getAllTopics() {
         return repository.findAll()
                 .stream()
-                .map(topic -> new TopicDTO(topic.getId(), topic.getName()))
+                .map(TopicMapper::toDTO)
                 .collect(Collectors.toList());
     }
 }
