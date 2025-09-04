@@ -65,17 +65,6 @@ Documentación y pruebas interactivas:
 
 http://localhost:8080/swagger-ui.html
 
-🧪 Testing
-
-Tests unitarios y de integración para controllers, services y repositories.
-
-Se ejecutan con H2 in-memory.
-
-mvn test
-
-
-Cobertura aproximada: 70%
-
 🗂️ Base de datos H2
 
 URL: jdbc:h2:mem:testdb
@@ -87,9 +76,95 @@ Contraseña: (vacío)
 Consola: http://localhost:8080/h2-console
 
 📝 Diagrama de clases
+```
+classDiagram
+    %% ===========================
+    %% Controllers
+    %% ===========================
+    class RequestController {
+        - RequestServiceContract service
+        + create(dto: RequestCreateDTO) ResponseEntity<RequestResponseDTO>
+        + getAll() ResponseEntity<List<RequestResponseDTO>>
+        + updateTopic(id: Long, dto: UpdateTopicDTO) ResponseEntity<RequestResponseDTO>
+        + updateDescription(id: Long, dto: UpdateDescriptionDTO) ResponseEntity<RequestResponseDTO>
+        + updateStatus(id: Long, dto: UpdateStatusDTO) ResponseEntity<RequestResponseDTO>
+    }
 
-(Aquí se puede insertar el diagrama de clases en Mermaid o imagen)
+    class TopicController {
+        - TopicServiceContract service
+        + getAll() ResponseEntity<List<TopicDTO>>
+    }
 
-🖼️ Captura de tests
+    %% ===========================
+    %% Contracts
+    %% ===========================
+    class RequestServiceContract {
+        <<interface>>
+        + createRequest(dto: RequestCreateDTO) RequestResponseDTO
+        + getAllRequests() List<RequestResponseDTO>
+        + updateTopic(id: Long, topic: String) RequestResponseDTO
+        + updateDescription(id: Long, description: String) RequestResponseDTO
+        + updateStatus(id: Long, status: String) RequestResponseDTO
+    }
 
-(Aquí se pueden colocar capturas de los resultados de los tests)
+    class TopicServiceContract {
+        <<interface>>
+        + getAllTopics() List<TopicDTO>
+    }
+
+    %% ===========================
+    %% DTOs
+    %% ===========================
+    class RequestCreateDTO {
+        + requesterName: String
+        + description: String
+        + topic: String
+    }
+
+    class RequestResponseDTO {
+        + id: Long
+        + requesterName: String
+        + description: String
+        + topic: String
+        + status: String
+        + technician: String
+        + createdAt: Date
+        + updatedAt: Date
+        + attendedAt: Date
+    }
+
+    class UpdateTopicDTO {
+        + topic: String
+    }
+
+    class UpdateDescriptionDTO {
+        + description: String
+    }
+
+    class UpdateStatusDTO {
+        + status: String
+    }
+
+    class TopicDTO {
+        + id: Long
+        + name: String
+    }
+
+    %% ===========================
+    %% Relations
+    %% ===========================
+    RequestController --> RequestServiceContract
+    TopicController --> TopicServiceContract
+
+    RequestController --> RequestCreateDTO
+    RequestController --> RequestResponseDTO
+    RequestController --> UpdateTopicDTO
+    RequestController --> UpdateDescriptionDTO
+    RequestController --> UpdateStatusDTO
+
+    TopicController --> TopicDTO
+```
+
+🧪 Captura de tests
+
+<img width="358" height="222" alt="image" src="https://github.com/user-attachments/assets/40a45b3e-6e08-4069-8714-3f3120bde899" />
