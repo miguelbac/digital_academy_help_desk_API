@@ -25,17 +25,29 @@ API REST para la gestión de **solicitudes (requests)** y **temas (topics)** de 
 - **controller**: Endpoints REST  
 - **exception**: Excepciones personalizadas  
 
----
-
 ## 🚀 Funcionalidades principales
 
 ### Requests
-- Crear, obtener, actualizar y eliminar solicitudes  
-- Actualizar estado, descripción, topic o solicitante  
-- Buscar por topic o por nombre del solicitante  
+
+| Método | Endpoint | Descripción | Body | Respuesta |
+|--------|---------|-------------|------|-----------|
+| `GET` | `/api/v1/requests` | Listar todas las solicitudes | - | Lista de `RequestResponseDTO` |
+| `POST` | `/api/v1/requests` | Crear una nueva solicitud | `RequestCreateDTO` | `RequestResponseDTO` creado |
+| `PATCH` | `/api/v1/requests/{id}/status` | Actualizar estado de una solicitud | `UpdateStatusDTO` | `RequestResponseDTO` actualizado |
+| `PATCH` | `/api/v1/requests/{id}/description` | Actualizar descripción de una solicitud | `UpdateDescriptionDTO` | `RequestResponseDTO` actualizado |
+| `PATCH` | `/api/v1/requests/{id}/topic` | Cambiar topic de la solicitud | `UpdateTopicDTO` | `RequestResponseDTO` actualizado |
+| `PATCH` | `/api/v1/requests/{id}/requester` | Cambiar solicitante de la solicitud | `{ "requesterName": "NuevoNombre" }` | `RequestResponseDTO` actualizado |
+| `GET` | `/api/v1/requests/search?requesterName=Alice` | Buscar solicitudes por nombre del solicitante | - | Lista de `RequestResponseDTO` |
+| `GET` | `/api/v1/requests/topic/{topicName}` | Obtener solicitudes por topic | - | Lista de `RequestResponseDTO` |
+| `DELETE` | `/api/v1/requests/{id}` | Eliminar solicitud | - | 204 No Content |
+
+---
 
 ### Topics
-- Listar todos los topics disponibles  
+
+| Método | Endpoint | Descripción | Body | Respuesta |
+|--------|---------|-------------|------|-----------|
+| `GET` | `/api/v1/topics` | Listar todos los topics disponibles | - | Lista de `TopicDTO` |
 
 ---
 
