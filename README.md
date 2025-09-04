@@ -44,18 +44,18 @@ API REST para la gestión de **solicitudes (requests)** y **temas (topics)** de 
 1. Clonar el repositorio:
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/miguelbac/digital_academy_help_desk_API.git
 cd digital_academy_help_desk_API
 ```
 Construir con Maven:
-
+```
 mvn clean install
-
+```
 
 Ejecutar:
-
+```
 mvn spring-boot:run
-
+```
 
 La API corre en: http://localhost:8080
 
