@@ -76,93 +76,116 @@ Contraseña: (vacío)
 Consola: http://localhost:8080/h2-console
 
 📝 Diagrama de clases
-```
+
+```mermaid
 classDiagram
-    %% ===========================
-    %% Controllers
-    %% ===========================
-    class RequestController {
-        - RequestServiceContract service
-        + create(dto: RequestCreateDTO) ResponseEntity<RequestResponseDTO>
-        + getAll() ResponseEntity<List<RequestResponseDTO>>
-        + updateTopic(id: Long, dto: UpdateTopicDTO) ResponseEntity<RequestResponseDTO>
-        + updateDescription(id: Long, dto: UpdateDescriptionDTO) ResponseEntity<RequestResponseDTO>
-        + updateStatus(id: Long, dto: UpdateStatusDTO) ResponseEntity<RequestResponseDTO>
+    %% =======================
+    %% MODELS
+    %% =======================
+    class Request {
+        +Long id
+        +String requesterName
+        +String topic
+        +String description
+        +String status
+        +String technician
+        +LocalDateTime createdAt
+        +LocalDateTime attendedAt
+        +LocalDateTime updatedAt
     }
 
-    class TopicController {
-        - TopicServiceContract service
-        + getAll() ResponseEntity<List<TopicDTO>>
+    class Topic {
+        +Long id
+        +String name
     }
 
-    %% ===========================
-    %% Contracts
-    %% ===========================
-    class RequestServiceContract {
-        <<interface>>
-        + createRequest(dto: RequestCreateDTO) RequestResponseDTO
-        + getAllRequests() List<RequestResponseDTO>
-        + updateTopic(id: Long, topic: String) RequestResponseDTO
-        + updateDescription(id: Long, description: String) RequestResponseDTO
-        + updateStatus(id: Long, status: String) RequestResponseDTO
-    }
-
-    class TopicServiceContract {
-        <<interface>>
-        + getAllTopics() List<TopicDTO>
-    }
-
-    %% ===========================
+    %% =======================
     %% DTOs
-    %% ===========================
+    %% =======================
     class RequestCreateDTO {
-        + requesterName: String
-        + description: String
-        + topic: String
+        +String requesterName
+        +String topic
+        +String description
     }
 
     class RequestResponseDTO {
-        + id: Long
-        + requesterName: String
-        + description: String
-        + topic: String
-        + status: String
-        + technician: String
-        + createdAt: Date
-        + updatedAt: Date
-        + attendedAt: Date
-    }
-
-    class UpdateTopicDTO {
-        + topic: String
+        +Long id
+        +String requesterName
+        +String topic
+        +String description
+        +String status
+        +String attendedBy
+        +LocalDateTime createdAt
+        +LocalDateTime attendedAt
     }
 
     class UpdateDescriptionDTO {
-        + description: String
+        +String description
     }
 
     class UpdateStatusDTO {
-        + status: String
+        +String status
+    }
+
+    class UpdateTopicDTO {
+        +String topic
     }
 
     class TopicDTO {
-        + id: Long
-        + name: String
+        +Long id
+        +String name
     }
 
-    %% ===========================
-    %% Relations
-    %% ===========================
-    RequestController --> RequestServiceContract
-    TopicController --> TopicServiceContract
+    %% =======================
+    %% MAPPERS
+    %% =======================
+    class RequestMapper {
+        +toDTO(request: Request): RequestResponseDTO
+    }
 
-    RequestController --> RequestCreateDTO
-    RequestController --> RequestResponseDTO
-    RequestController --> UpdateTopicDTO
-    RequestController --> UpdateDescriptionDTO
-    RequestController --> UpdateStatusDTO
+    %% =======================
+    %% SERVICES / CONTRACTS
+    %% =======================
+    class RequestService {
+        +createRequest(dto: RequestCreateDTO): RequestResponseDTO
+        +getAllRequests(): List~RequestResponseDTO~
+        +updateStatus(id: Long, status: String): RequestResponseDTO
+        +updateDescription(id: Long, desc: String): RequestResponseDTO
+        +updateTopic(id: Long, topic: String): RequestResponseDTO
+        +reassignRequester(id: Long, requester: String): RequestResponseDTO
+        +deleteRequest(id: Long)
+        +getRequestsByTopic(topic: String): List~RequestResponseDTO~
+        +searchByRequesterName(name: String): List~RequestResponseDTO~
+    }
 
-    TopicController --> TopicDTO
+    class TopicService {
+        +getAllTopics(): List~TopicDTO~
+    }
+
+    %% =======================
+    %% REPOSITORIES
+    %% =======================
+    class RequestRepository {
+        +findAllByOrderByCreatedAtAsc(): List~Request~
+        +findByRequesterNameContainingIgnoreCaseOrderByCreatedAtAsc(name: String): List~Request~
+        +findByTopicOrderByCreatedAtAsc(topic: String): List~Request~
+    }
+
+    class TopicRepository {
+        +existsByName(name: String): boolean
+    }
+
+    %% =======================
+    %% RELATIONSHIPS
+    %% =======================
+    RequestService --> RequestRepository
+    RequestService --> TopicRepository
+    RequestService --> RequestMapper
+
+    TopicService --> TopicRepository
+
+    RequestMapper --> Request
+    RequestMapper --> RequestResponseDTO
 ```
 
 🧪 Captura de tests
