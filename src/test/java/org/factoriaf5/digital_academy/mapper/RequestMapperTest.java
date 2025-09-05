@@ -35,7 +35,7 @@ class RequestMapperTest {
         assertEquals(request.getTopic(), dto.getTopic());
         assertEquals(request.getDescription(), dto.getDescription());
         assertEquals(request.getStatus(), dto.getStatus());
-        assertEquals(request.getTechnician(), dto.getAttendedBy());
+        assertEquals(request.getTechnician(), dto.getTechnician());
         assertEquals(request.getCreatedAt(), dto.getCreatedAt());
         assertEquals(request.getAttendedAt(), dto.getAttendedAt());
     }

@@ -1,8 +1,6 @@
 package org.factoriaf5.digital_academy.service;
 
-import org.factoriaf5.digital_academy.contract.RequestServiceContract;
-import org.factoriaf5.digital_academy.dto.RequestCreateDTO;
-import org.factoriaf5.digital_academy.dto.RequestResponseDTO;
+import org.factoriaf5.digital_academy.dto.*;
 import org.factoriaf5.digital_academy.exception.InvalidStatusException;
 import org.factoriaf5.digital_academy.exception.RequestNotFoundException;
 import org.factoriaf5.digital_academy.exception.TopicNotFoundException;
@@ -14,24 +12,20 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
-public class RequestService implements RequestServiceContract {
+public class RequestService {
 
-    private final RequestRepository repository;
-    private final TopicRepository topicRepository;
-    private static final Set<String> VALID_STATUSES = Set.of("pending", "in_progress", "attended");
+    private final RequestRepository requestRepo;
+    private final TopicRepository topicRepo;
 
-    public RequestService(RequestRepository repository, TopicRepository topicRepository) {
-        this.repository = repository;
-        this.topicRepository = topicRepository;
+    public RequestService(RequestRepository requestRepo, TopicRepository topicRepo) {
+        this.requestRepo = requestRepo;
+        this.topicRepo = topicRepo;
     }
 
-    @Override
     public RequestResponseDTO createRequest(RequestCreateDTO dto) {
-        if (!topicRepository.existsByName(dto.getTopic())) {
+        if (!topicRepo.existsByName(dto.getTopic())) {
             throw new TopicNotFoundException(dto.getTopic());
         }
 
@@ -41,88 +35,93 @@ public class RequestService implements RequestServiceContract {
         request.setDescription(dto.getDescription());
         request.setStatus("pending");
         request.setCreatedAt(LocalDateTime.now());
+        request.setUpdatedAt(LocalDateTime.now());
 
-        Request saved = repository.save(request);
-        return RequestMapper.toDTO(saved);
+        return RequestMapper.toDTO(requestRepo.save(request));
     }
 
-    @Override
     public List<RequestResponseDTO> getAllRequests() {
-        return repository.findAllByOrderByCreatedAtAsc()
+        return requestRepo.findAllByOrderByCreatedAtAsc()
                 .stream()
                 .map(RequestMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    @Override
-    public RequestResponseDTO updateStatus(Long id, String newStatus) {
-        Request request = repository.findById(id)
+    /**
+     * Actualiza el estado de la solicitud.
+     * Si el estado es "attended", registra el técnico y la fecha de atención.
+     */
+    public RequestResponseDTO updateStatus(Long id, String status, String technician) {
+        Request request = requestRepo.findById(id)
                 .orElseThrow(() -> new RequestNotFoundException(id));
 
-        if (!VALID_STATUSES.contains(newStatus.toLowerCase())) {
-            throw new InvalidStatusException(newStatus);
+        if (!status.equals("pending") && !status.equals("in_progress") && !status.equals("attended")) {
+            throw new InvalidStatusException(status);
         }
 
-        request.setStatus(newStatus.toLowerCase());
-        return RequestMapper.toDTO(repository.save(request));
-    }
+        request.setStatus(status);
+        request.setUpdatedAt(LocalDateTime.now());
 
-    @Override
-    public List<RequestResponseDTO> getRequestsByTopic(String topicName) {
-        if (!topicRepository.existsByName(topicName)) {
-            throw new TopicNotFoundException(topicName);
+        if ("attended".equals(status)) {
+            request.setTechnician(technician);
+            request.setAttendedAt(LocalDateTime.now());
         }
 
-        return repository.findByTopicOrderByCreatedAtAsc(topicName)
-                .stream()
-                .map(RequestMapper::toDTO)
-                .collect(Collectors.toList());
+        return RequestMapper.toDTO(requestRepo.save(request));
     }
 
-    @Override
-    public List<RequestResponseDTO> searchByRequesterName(String requesterName) {
-        return repository.findByRequesterNameContainingIgnoreCaseOrderByCreatedAtAsc(requesterName)
-                .stream()
-                .map(RequestMapper::toDTO)
-                .collect(Collectors.toList());
+    public RequestResponseDTO updateDescription(Long id, String desc) {
+        Request request = requestRepo.findById(id)
+                .orElseThrow(() -> new RequestNotFoundException(id));
+
+        request.setDescription(desc);
+        request.setUpdatedAt(LocalDateTime.now());
+
+        return RequestMapper.toDTO(requestRepo.save(request));
     }
 
-    @Override
+    public RequestResponseDTO updateTopic(Long id, String topic) {
+        if (!topicRepo.existsByName(topic)) {
+            throw new TopicNotFoundException(topic);
+        }
+
+        Request request = requestRepo.findById(id)
+                .orElseThrow(() -> new RequestNotFoundException(id));
+
+        request.setTopic(topic);
+        request.setUpdatedAt(LocalDateTime.now());
+
+        return RequestMapper.toDTO(requestRepo.save(request));
+    }
+
+    public RequestResponseDTO reassignRequester(Long id, String requester) {
+        Request request = requestRepo.findById(id)
+                .orElseThrow(() -> new RequestNotFoundException(id));
+
+        request.setRequesterName(requester);
+        request.setUpdatedAt(LocalDateTime.now());
+
+        return RequestMapper.toDTO(requestRepo.save(request));
+    }
+
     public void deleteRequest(Long id) {
-        Request request = repository.findById(id)
+        Request request = requestRepo.findById(id)
                 .orElseThrow(() -> new RequestNotFoundException(id));
 
-        repository.delete(request);
+        requestRepo.delete(request);
     }
 
-    @Override
-    public RequestResponseDTO updateDescription(Long id, String newDescription) {
-        Request request = repository.findById(id)
-                .orElseThrow(() -> new RequestNotFoundException(id));
-
-        request.setDescription(newDescription);
-        return RequestMapper.toDTO(repository.save(request));
+    public List<RequestResponseDTO> getRequestsByTopic(String topic) {
+        return requestRepo.findByTopicOrderByCreatedAtAsc(topic)
+                .stream()
+                .map(RequestMapper::toDTO)
+                .toList();
     }
 
-    @Override
-    public RequestResponseDTO reassignRequester(Long id, String newRequesterName) {
-        Request request = repository.findById(id)
-                .orElseThrow(() -> new RequestNotFoundException(id));
-
-        request.setRequesterName(newRequesterName);
-        return RequestMapper.toDTO(repository.save(request));
-    }
-
-    @Override
-    public RequestResponseDTO updateTopic(Long id, String newTopic) {
-        if (!topicRepository.existsByName(newTopic)) {
-            throw new TopicNotFoundException(newTopic);
-        }
-
-        Request request = repository.findById(id)
-                .orElseThrow(() -> new RequestNotFoundException(id));
-
-        request.setTopic(newTopic);
-        return RequestMapper.toDTO(repository.save(request));
+    public List<RequestResponseDTO> searchByRequesterName(String name) {
+        return requestRepo.findByRequesterNameContainingIgnoreCaseOrderByCreatedAtAsc(name)
+                .stream()
+                .map(RequestMapper::toDTO)
+                .toList();
     }
 }

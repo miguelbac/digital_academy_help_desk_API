@@ -10,7 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -34,32 +35,31 @@ class RequestControllerTest {
         RequestResponseDTO dto = new RequestResponseDTO(
                 1L, "Alice", "Laptop issue", "Issue description", "pending", "Technician1", null, null
         );
-        when(service.getAllRequests()).thenReturn(Arrays.asList(dto));
+        when(service.getAllRequests()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/api/v1/requests"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].requesterName").value("Alice"));
     }
 
-@Test
-void testCreateRequest() throws Exception {
-    RequestCreateDTO createDTO = new RequestCreateDTO("Bob", "Software", "App not working");
-    RequestResponseDTO responseDTO = new RequestResponseDTO(
-            2L, "Bob", "Software", "App not working", "pending", null, null, null
-    );
+    @Test
+    void testCreateRequest() throws Exception {
+        RequestCreateDTO createDTO = new RequestCreateDTO("Bob", "Software", "App not working");
+        RequestResponseDTO responseDTO = new RequestResponseDTO(
+                2L, "Bob", "Software", "App not working", "pending", null, null, null
+        );
 
-    when(service.createRequest(any(RequestCreateDTO.class))).thenReturn(responseDTO);
+        when(service.createRequest(any(RequestCreateDTO.class))).thenReturn(responseDTO);
 
-    mockMvc.perform(post("/api/v1/requests")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createDTO)))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.requesterName").value("Bob"))
-            .andExpect(jsonPath("$.topic").value("Software"))
-            .andExpect(jsonPath("$.description").value("App not working"))
-            .andExpect(jsonPath("$.status").value("pending"));
-}
-
+        mockMvc.perform(post("/api/v1/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.requesterName").value("Bob"))
+                .andExpect(jsonPath("$.topic").value("Software"))
+                .andExpect(jsonPath("$.description").value("App not working"))
+                .andExpect(jsonPath("$.status").value("pending"));
+    }
 
     @Test
     void testUpdateDescription() throws Exception {
@@ -79,18 +79,20 @@ void testCreateRequest() throws Exception {
 
     @Test
     void testUpdateStatus() throws Exception {
-        UpdateStatusDTO dto = new UpdateStatusDTO("attended");
+        UpdateStatusDTO dto = new UpdateStatusDTO("attended", "Technician1");
         RequestResponseDTO responseDTO = new RequestResponseDTO(
-                1L, "Alice", "Laptop issue", "Issue description", "attended", "Technician1", null, null
+                1L, "Alice", "Laptop issue", "Issue description", "attended", "Technician1",
+                LocalDateTime.now(), LocalDateTime.now()
         );
 
-        when(service.updateStatus(1L, "attended")).thenReturn(responseDTO);
+        when(service.updateStatus(1L, "attended", "Technician1")).thenReturn(responseDTO);
 
         mockMvc.perform(patch("/api/v1/requests/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("attended"));
+                .andExpect(jsonPath("$.status").value("attended"))
+                .andExpect(jsonPath("$.technician").value("Technician1"));
     }
 
     @Test
