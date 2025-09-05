@@ -27,19 +27,25 @@ API REST para la gestión de **solicitudes (requests)** y **temas (topics)** de 
 
 ## 🚀 Funcionalidades principales
 
-### Requests
+## 📝 Endpoints de Requests
 
-| Método | Endpoint | Descripción | Body | Respuesta |
-|--------|---------|-------------|------|-----------|
-| `GET` | `/api/v1/requests` | Listar todas las solicitudes | - | Lista de `RequestResponseDTO` |
-| `POST` | `/api/v1/requests` | Crear una nueva solicitud | `RequestCreateDTO` | `RequestResponseDTO` creado |
-| `PATCH` | `/api/v1/requests/{id}/status` | Actualizar estado de una solicitud | `UpdateStatusDTO` | `RequestResponseDTO` actualizado |
-| `PATCH` | `/api/v1/requests/{id}/description` | Actualizar descripción de una solicitud | `UpdateDescriptionDTO` | `RequestResponseDTO` actualizado |
-| `PATCH` | `/api/v1/requests/{id}/topic` | Cambiar topic de la solicitud | `UpdateTopicDTO` | `RequestResponseDTO` actualizado |
-| `PATCH` | `/api/v1/requests/{id}/requester` | Cambiar solicitante de la solicitud | `{ "requesterName": "NuevoNombre" }` | `RequestResponseDTO` actualizado |
-| `GET` | `/api/v1/requests/search?requesterName=Alice` | Buscar solicitudes por nombre del solicitante | - | Lista de `RequestResponseDTO` |
-| `GET` | `/api/v1/requests/topic/{topicName}` | Obtener solicitudes por topic | - | Lista de `RequestResponseDTO` |
-| `DELETE` | `/api/v1/requests/{id}` | Eliminar solicitud | - | 204 No Content |
+| Método | Endpoint | Descripción | Body (JSON) | Respuesta (JSON) |
+|--------|---------|-------------|-------------|-----------------|
+| `GET` | `/requests` | Listar todas las solicitudes | - | Lista de `RequestResponseDTO`<br>```json [{ "id": 1, "requesterName": "Alice", "topic": "Hardware", "description": "Laptop issue", "status": "pending", "technician": null, "createdAt": "2025-09-05T12:00:00", "attendedAt": null }]``` |
+| `POST` | `/requests` | Crear una nueva solicitud | ```json { "requesterName": "Bob", "topic": "Software", "description": "App not working" }``` | `RequestResponseDTO` creado<br>```json { "id": 2, "requesterName": "Bob", "topic": "Software", "description": "App not working", "status": "pending", "technician": null, "createdAt": "2025-09-05T12:05:00", "attendedAt": null }``` |
+| `PATCH` | `/requests/{id}/status` | Actualizar estado de una solicitud y asignar técnico | ```json { "status": "attended", "technician": "John Tech" }``` | `RequestResponseDTO` actualizado<br>```json { "id": 1, "requesterName": "Alice", "topic": "Hardware", "description": "Laptop issue", "status": "attended", "technician": "John Tech", "createdAt": "2025-09-05T12:00:00", "attendedAt": "2025-09-05T14:00:00" }``` |
+| `PATCH` | `/requests/{id}/description` | Actualizar descripción de una solicitud | ```json { "description": "Nueva descripción del problema" }``` | `RequestResponseDTO` actualizado |
+| `PATCH` | `/requests/{id}/topic` | Cambiar topic de la solicitud | ```json { "topic": "Network" }``` | `RequestResponseDTO` actualizado |
+| `PATCH` | `/requests/{id}/requester` | Cambiar solicitante de la solicitud | ```json { "requesterName": "Nuevo Nombre" }``` | `RequestResponseDTO` actualizado |
+| `GET` | `/requests/search?name=Alice` | Buscar solicitudes por nombre del solicitante | - | Lista de `RequestResponseDTO` |
+| `GET` | `/requests/topic/{topic}` | Obtener solicitudes por topic | - | Lista de `RequestResponseDTO` |
+| `DELETE` | `/requests/{id}` | Eliminar solicitud | - | 204 No Content |
+
+## 📝 Endpoints de Topics
+
+| Método | Endpoint | Descripción | Body (JSON) | Respuesta (JSON) |
+|--------|---------|-------------|-------------|-----------------|
+| `GET` | `/topics` | Listar todos los topics disponibles | - | Lista de `TopicDTO`<br>```json [ { "id": 1, "name": "Hardware" }, { "id": 2, "name": "Software" }, { "id": 3, "name": "Network" }, { "id": 4, "name": "Accounts" }, { "id": 5, "name": "Other" } ]``` |
 
 ---
 
