@@ -5,7 +5,7 @@ INSERT INTO topics (name) VALUES ('Network');
 INSERT INTO topics (name) VALUES ('Accounts');
 INSERT INTO topics (name) VALUES ('Other');
 
--- Requests "pending"
+-- Requests Pending
 INSERT INTO requests (requester_name, topic, description, status, created_at)
 VALUES ('Alice Smith', 'Hardware', 'Laptop not turning on', 'pending', CURRENT_TIMESTAMP);
 
@@ -18,7 +18,9 @@ VALUES ('Carol White', 'Network', 'WiFi not connecting', 'pending', CURRENT_TIME
 INSERT INTO requests (requester_name, topic, description, status, created_at)
 VALUES ('David Lee', 'Accounts', 'Forgot password', 'pending', CURRENT_TIMESTAMP);
 
--- Requests "attended" (con fechas antiguas y técnico)
+INSERT INTO requests (requester_name, topic, description, status, created_at, technician)
+VALUES ('Hannah Green', 'Other', 'Printer not working', 'in_progress', CURRENT_TIMESTAMP, 'Tech Team 1');
+
 INSERT INTO requests (requester_name, topic, description, status, created_at, attended_at, technician)
 VALUES ('Eve Adams', 'Hardware', 'Monitor flickering issue', 'attended',
         DATEADD('DAY', -2, CURRENT_TIMESTAMP),

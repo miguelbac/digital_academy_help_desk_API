@@ -14,7 +14,7 @@ public class Request {
     private String requesterName;
     private String topic;
     private String description;
-    private String status; // "pending" or "attended"
+    private String status;
 
     private String technician;
     private LocalDateTime createdAt;

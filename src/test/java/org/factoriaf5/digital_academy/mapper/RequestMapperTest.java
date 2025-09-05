@@ -12,7 +12,6 @@ class RequestMapperTest {
 
     @Test
     void toDTO_shouldMapAllFieldsCorrectly() {
-        // Arrange
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime attendedAt = createdAt.plusDays(1);
 
@@ -26,10 +25,8 @@ class RequestMapperTest {
         request.setCreatedAt(createdAt);
         request.setAttendedAt(attendedAt);
 
-        // Act
         RequestResponseDTO dto = RequestMapper.toDTO(request);
 
-        // Assert
         assertEquals(request.getId(), dto.getId());
         assertEquals(request.getRequesterName(), dto.getRequesterName());
         assertEquals(request.getTopic(), dto.getTopic());

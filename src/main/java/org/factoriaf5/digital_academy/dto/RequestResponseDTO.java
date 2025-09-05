@@ -8,8 +8,8 @@ public class RequestResponseDTO {
     private String requesterName;
     private String topic;
     private String description;
-    private String status; // pending / in_progress / attended
-    private String technician; // nuevo campo
+    private String status;
+    private String technician;
     private LocalDateTime createdAt;
     private LocalDateTime attendedAt;
 
@@ -26,7 +26,6 @@ public class RequestResponseDTO {
         this.attendedAt = attendedAt;
     }
 
-    // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getRequesterName() { return requesterName; }

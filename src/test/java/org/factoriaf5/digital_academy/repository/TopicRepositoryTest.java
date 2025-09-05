@@ -19,13 +19,13 @@ class TopicRepositoryTest {
 
     @BeforeEach
     void clean() {
-        topicRepository.deleteAll(); // Limpiar tabla antes de cada test
+        topicRepository.deleteAll();
     }
 
     @Test
     void testSaveAndFindById() {
         Topic topic = new Topic();
-        topic.setName("Hardware-" + UUID.randomUUID()); // Nombre único
+        topic.setName("Hardware-" + UUID.randomUUID());
         topicRepository.save(topic);
 
         Topic found = topicRepository.findById(topic.getId()).orElse(null);

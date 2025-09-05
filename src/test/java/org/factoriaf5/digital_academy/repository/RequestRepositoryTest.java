@@ -19,7 +19,7 @@ class RequestRepositoryTest {
 
     @BeforeEach
     void clean() {
-        requestRepository.deleteAll(); // Limpiar tabla antes de cada test
+        requestRepository.deleteAll();
     }
 
     @Test
@@ -48,7 +48,7 @@ class RequestRepositoryTest {
         request1.setCreatedAt(LocalDateTime.now());
         requestRepository.save(request1);
 
-        Thread.sleep(10); // asegurar diferencia de tiempo
+        Thread.sleep(10);
 
         Request request2 = new Request();
         request2.setRequesterName("Carol");

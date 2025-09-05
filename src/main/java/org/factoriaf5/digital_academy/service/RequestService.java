@@ -47,10 +47,6 @@ public class RequestService {
                 .toList();
     }
 
-    /**
-     * Actualiza el estado de la solicitud.
-     * Si el estado es "attended", registra el técnico y la fecha de atención.
-     */
     public RequestResponseDTO updateStatus(Long id, String status, String technician) {
         Request request = requestRepo.findById(id)
                 .orElseThrow(() -> new RequestNotFoundException(id));
